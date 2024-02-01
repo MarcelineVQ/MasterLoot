@@ -285,9 +285,16 @@ function XckMLAdvancedLUA:CountdownClicked()
 		self:Print(XCKMLA_NoDropAnnouncedYet)
 		return
 	end
-	self.countdownRunning = true
-	self.countdownStartTime = GetTime()
-	self.countdownLastDisplayed = self.countdownRange + 1
+
+	if(self.countdownRunning) then
+		self.countdownRunning = false
+		local itemLink = MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)
+		SendChatMessage(itemLink .. " Rolling Cancelled", 'Raid')
+	else
+		self.countdownRunning = true
+		self.countdownStartTime = GetTime()
+		self.countdownLastDisplayed = self.countdownRange + 1
+	end
 end
 
 --DE Current Item

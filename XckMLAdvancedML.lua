@@ -753,6 +753,12 @@ function MasterLootRolls:UpdateRollList()
 			end
 		end
 
+		if(grank == "Guest") then
+			playerRankLabel:SetTextColor(0, 1, 0.59)
+		else
+			playerRankLabel:SetTextColor(1, 1, 1)
+		end
+
 		playerRankLabel:SetText(grank)
 		playerSpecLabel:SetText(gspec)
 

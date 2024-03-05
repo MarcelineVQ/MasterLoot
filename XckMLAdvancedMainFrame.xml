@@ -80,6 +80,24 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					</Anchors>
 					<Color r="1" g="1" b="1" a="1" />
 				</FontString>
+				<FontString name="$parent_PlayerRank" inherits="GameFontNormalSmall"
+				justifyH="LEFT" text="Alt">
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset x="105" y="0" />
+						</Anchor>
+					</Anchors>
+					<Color r="1" g="1" b="1" a="1" />
+				</FontString>
+				<FontString name="$parent_PlayerSpec" inherits="GameFontNormalSmall"
+				justifyH="LEFT" text="Undyingpower">
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset x="155" y="0" />
+						</Anchor>
+					</Anchors>
+					<Color r="1" g="1" b="1" a="1" />
+				</FontString>
 				<FontString name="$parent_PlayerRoll" inherits="GameFontNormalSmall"
 				justifyH="RIGHT" text="100">
 					<Anchors>
@@ -346,6 +364,24 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					<Anchors>
 						<Anchor point="TOPLEFT" relativePoint="LEFT" relativeTo="$parent_CurrentItemLink">
 							<Offset x="-15" y="-48" />
+						</Anchor>
+					</Anchors>
+					<Size><Absdimension x="100" /></Size>
+					<Color r="1" g="1" b="1" a="1" />
+				</FontString>
+				<FontString name="$parent_PlayerLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="Rank">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="LEFT" relativeTo="$parent_CurrentItemLink">
+							<Offset x="65" y="-48" />
+						</Anchor>
+					</Anchors>
+					<Size><Absdimension x="100" /></Size>
+					<Color r="1" g="1" b="1" a="1" />
+				</FontString>
+				<FontString name="$parent_PlayerLabel" inherits="GameFontNormalSmall" justifyH="LEFT" text="Spec">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativePoint="LEFT" relativeTo="$parent_CurrentItemLink">
+							<Offset x="115" y="-48" />
 						</Anchor>
 					</Anchors>
 					<Size><Absdimension x="100" /></Size>

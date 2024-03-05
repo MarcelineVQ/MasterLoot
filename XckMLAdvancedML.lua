@@ -171,6 +171,14 @@ end
 -----
 ------ Save Settings
 function XckMLAdvancedLUA:SaveSettings()
+
+	guildmembersdb = {}
+	G_Count = GetNumGuildMembers(numTotalMembers)
+    for i = 1, G_Count do
+		local name,rank,_,_,class,_,_,onote = GetGuildRosterInfo(i);
+		table.insert(guildmembersdb, {name=name, rank=rank, class=class, onote=onote})
+	end
+
 	XckMLAdvancedLUA.PDez = UIDropDownMenu_GetText(XckMLAdvancedLUA.deDropdownFrame)
 	XckMLAdvancedLUA.bank = UIDropDownMenu_GetText(XckMLAdvancedLUA.bankDropdownFrame)
 	XckMLAdvancedLUA.poorguy = UIDropDownMenu_GetText(XckMLAdvancedLUA.poorguyDropdownFrame)
@@ -178,7 +186,6 @@ function XckMLAdvancedLUA:SaveSettings()
 	XckMLAdvancedLUA.qualityListSet = UIDropDownMenu_GetText(XckMLAdvancedLUA.qualityListDropdownFrame)
 	XckMLAdvancedLUA.RollorNeed = UIDropDownMenu_GetText(XckMLAdvancedLUA.RollorNeedDropdownFrame)
 	XckMLAdvancedLUA.countdownStartTime = XckMLAdvancedLUA.CountDownTimeFrame:GetValue()
-
 	DEFAULT_CHAT_FRAME:AddMessage(XCKMLA_WelcomeMessage)
 	DEFAULT_CHAT_FRAME:AddMessage(XCKMLA_SavedSettingsSuccessSaved)
 	DEFAULT_CHAT_FRAME:AddMessage("|cff20b2aa->|r |cffffd700"..XCKMLA_SavedSettingPlayerDE..self:GetHexClassColor(XckMLAdvancedLUA.PDez) .. XckMLAdvancedLUA.PDez.."|r|cffead454")
@@ -188,6 +195,8 @@ function XckMLAdvancedLUA:SaveSettings()
 	DEFAULT_CHAT_FRAME:AddMessage("|cff20b2aa->|r |cffffd700"..XCKMLA_SavedSettingPlayerRollOrNeed.."  |cffead454|r|cffff8362" .. XckMLAdvancedLUA.RollorNeed .. "|r|cffead454")
 	DEFAULT_CHAT_FRAME:AddMessage("|cff20b2aa->|r |cffffd700"..XCKMLA_SavedSettingPlayerMinQuality.."  |cffead454|r|cffff8362" .. XckMLAdvancedLUA.qualityListSet .. "|r|cffead454")
 	DEFAULT_CHAT_FRAME:AddMessage("|cff20b2aa->|r |cffffd700"..XCKMLA_SavedSettingCountdownTimer.."  |cffead454|r|cffff8362" .. XckMLAdvancedLUA.countdownStartTime .. "|r|cffead454")
+	DEFAULT_CHAT_FRAME:AddMessage("|cff20b2aa->|r |cffffd700".."Guild Members found: ".."  |cffead454|r|cffff8362"..G_Count.."|r|cffead454")
+
 end
 
 -----
@@ -727,6 +736,26 @@ function MasterLootRolls:UpdateRollList()
 		playerNameLabel:SetText(playerName)
 		playerNameLabel:SetTextColor(r, g, b)
 		
+		local playerRankLabel = getglobal(buttonName .. "_PlayerRank")
+		local playerSpecLabel = getglobal(buttonName .. "_PlayerSpec")
+		
+		grank = "Guest"
+		gspec = ""
+
+		for j = 1, G_Count do 
+			if(guildmembersdb[j].name == playerName) then
+				for key,value in specTable do
+					if string.find(guildmembersdb[j].onote, key) then 
+						gspec = value
+					end
+				end
+				grank = guildmembersdb[j].rank
+			end
+		end
+
+		playerRankLabel:SetText(grank)
+		playerSpecLabel:SetText(gspec)
+
 		local starTexture = getglobal(buttonName .. "_StarTexture")
 		if (playerName == self.winningPlayer) then
 			starTexture:Show()
@@ -741,6 +770,8 @@ function MasterLootRolls:UpdateRollList()
 			elseif(XckMLAdvancedLUA.RollorNeed == "Roll") then
 			playerRollLabel:SetText(playerRoll)
 		end
+
+
 		
 		rollFrame:SetPoint("TOPLEFT", scrollChild, "TOPLEFT", 0, -totalHeight)
 		rollFrame:SetPoint("RIGHT", scrollChild, "RIGHT", 0, 0)
@@ -1212,6 +1243,37 @@ function XckMLAdvancedLUA:InitButtonLootAllItems()
 			end
 		end
 	end)
+end
+
+
+-------
+------- Guild info
+-------
+function GetGuildMembers()
+	guildmembersdb = {}
+	GCount = GetNumGuildMembers(numTotalMembers)
+    for i = 1, GCount do
+		local name,rank,_,_,class,_,_,onote = GetGuildRosterInfo(i);
+		table.insert(guildmembersdb, {name=name, rank=rank, class=class, onote=onote})
+	end
+	print(GCount)
+	print ("Guild Collected")
+end
+
+function RetrieveGuildMember()
+	print(G_Count)
+	-- print(GName..)
+	for i = 1, G_Count do 
+		-- if(guildmembersdb[i].name == GName) then
+			if string.find(guildmembersdb[i].onote, "MS:B") then
+				print(guildmembersdb[i].name.." "..guildmembersdb[i].rank.." ".."Boomkin")
+			end
+			if string.find(guildmembersdb[i].onote, "MS:F") then
+				print(guildmembersdb[i].name.." "..guildmembersdb[i].rank.." ".."Frost")
+			end
+		-- end
+	end
+	-- return spec
 end
 
 -------

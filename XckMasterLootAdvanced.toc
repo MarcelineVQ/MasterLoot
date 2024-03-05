@@ -8,6 +8,7 @@
 ## SavedVariables: MasterLootManagerSettings
 languages\LocalizationsStrings.lua
 lootprio.lua
+specTable.lua
 XckMLAdvancedMainFrame.xml
 XckMLAdvancedSettingsFrame.xml
 languages\LocalizationRaidItemsLib.lua

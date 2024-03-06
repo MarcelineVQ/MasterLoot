@@ -853,7 +853,7 @@ function XckMLAdvancedLUA:CreateBasicSelectionFrame()
 	if (selectionFrame == nil) then
 		selectionFrame = CreateFrame("Frame", "SelectFrame", nil, UIParent)
 		selectionFrame:SetBackdrop( {
-			bgFile = "Interface\\AddOns\\XckMasterLootAdvanced\\img\\UI-RaidFrame-GroupBg",
+			bgFile = "Interface\\AddOns\\MasterLoot\\img\\UI-RaidFrame-GroupBg",
 			edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
 			tile = true,
 			tileSize = 10,
@@ -1148,11 +1148,11 @@ function XckMLAdvancedLUA:InitAllLootFrameFrame()
 	BSettings:SetWidth(20) 
 	BSettings:SetHeight(20)
 	local BSettingsNtex = BSettings:CreateTexture()
-	BSettingsNtex:SetTexture("Interface\\AddOns\\XckMasterLootAdvanced\\img\\UI-Dialog-Icon-AlertOther")
+	BSettingsNtex:SetTexture("Interface\\AddOns\\MasterLoot\\img\\UI-Dialog-Icon-AlertOther")
 	BSettingsNtex:SetAllPoints()	
 	BSettings:SetNormalTexture(BSettingsNtex)
 	local BSettingsHtex = BSettings:CreateTexture()
-	BSettingsHtex:SetTexture("Interface\\AddOns\\XckMasterLootAdvanced\\img\\UI-Dialog-Icon-AlertOther")
+	BSettingsHtex:SetTexture("Interface\\AddOns\\MasterLoot\\img\\UI-Dialog-Icon-AlertOther")
 	BSettingsHtex:SetAllPoints()
 	BSettings:SetHighlightTexture(BSettingsHtex)
 	BSettings:SetScript('OnClick', function()
@@ -1168,11 +1168,11 @@ function XckMLAdvancedLUA:InitAllLootFrameFrame()
 	BAnnounceDrops:SetWidth(25) 
 	BAnnounceDrops:SetHeight(25)
 	local BAnnounceDropsNtex = BAnnounceDrops:CreateTexture()
-	BAnnounceDropsNtex:SetTexture("Interface\\AddOns\\XckMasterLootAdvanced\\img\\INV_MISC_BEER_02")
+	BAnnounceDropsNtex:SetTexture("Interface\\AddOns\\MasterLoot\\img\\INV_MISC_BEER_02")
 	BAnnounceDropsNtex:SetAllPoints()
 	BAnnounceDrops:SetNormalTexture(BAnnounceDropsNtex)
 	local BAnnounceDropsHtex = BAnnounceDrops:CreateTexture()
-	BAnnounceDropsHtex:SetTexture("Interface\\AddOns\\XckMasterLootAdvanced\\img\\INV_MISC_BEER_02")
+	BAnnounceDropsHtex:SetTexture("Interface\\AddOns\\MasterLoot\\img\\INV_MISC_BEER_02")
 	BAnnounceDropsHtex:SetAllPoints()
 	BAnnounceDrops:SetHighlightTexture(BAnnounceDropsHtex)
 	BAnnounceDrops:SetScript('OnClick', function()

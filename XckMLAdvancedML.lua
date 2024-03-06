@@ -172,6 +172,7 @@ end
 ------ Save Settings
 function XckMLAdvancedLUA:SaveSettings()
 
+	SetGuildRosterShowOffline(true)
 	guildmembersdb = {}
 	G_Count = GetNumGuildMembers(numTotalMembers)
     for i = 1, G_Count do

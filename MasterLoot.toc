@@ -7,8 +7,10 @@
 ## LoadOnDemand: 0
 ## SavedVariables: MasterLootManagerSettings
 languages\LocalizationsStrings.lua
+lootRes.lua
 lootprio.lua
 specTable.lua
+lootRes.xml
 XckMLAdvancedMainFrame.xml
 XckMLAdvancedSettingsFrame.xml
 languages\LocalizationRaidItemsLib.lua

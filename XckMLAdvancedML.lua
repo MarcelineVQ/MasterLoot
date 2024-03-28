@@ -404,7 +404,7 @@ function GiveLootToWinner()
 						local itemLink = GetLootSlotLink(itemIndex)
 						if (itemLink == MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)) then
 							GiveMasterLoot(itemIndex, winningPlayerIndex)
-							XckMLAdvancedLUA:Speak(MasterLootRolls.winningPlayer .. " recieved " .. itemLink)
+							XckMLAdvancedLUA:Speak(MasterLootRolls.winningPlayer .. " received " .. itemLink)
 							MasterLootRolls:ClearRollList()
 							MasterLootRolls.winningPlayer = nil
 							XckMLAdvancedLUA.ConfirAttrib = nil
@@ -888,6 +888,13 @@ function XckMLAdvancedLUA:CreateBasicSelectionFrame()
 	end
 end
 
+-- function XckMLAdvancedLUA:sr_prio()
+-- 	sr_prio = {}
+	
+
+-- end
+
+
 -- Update the Current Item Switched
 function XckMLAdvancedLUA:UpdateCurrentItem()
 	local lootPrioEditBox = getglobal("XckMLAdvancedMain_lootprio")
@@ -910,7 +917,9 @@ function XckMLAdvancedLUA:UpdateCurrentItem()
 				-- 	-- print(itemIndex)
 				-- end
 				
-				if(loot_prio[name]) then
+				if(LOOTRES_RESERVES[name]) then
+					XckMLAdvancedLUA.LootPrioText = "SR: "..LOOTRES_RESERVES[name]
+				elseif(loot_prio[name]) then
 					XckMLAdvancedLUA.LootPrioText = loot_prio[name]
 				else
 					XckMLAdvancedLUA.LootPrioText = name

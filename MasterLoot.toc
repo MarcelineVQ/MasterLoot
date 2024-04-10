@@ -10,7 +10,7 @@ languages\LocalizationsStrings.lua
 lootRes.lua
 lootprio.lua
 specTable.lua
-lootRes.xml
+Util.lua
 XckMLAdvancedMainFrame.xml
 XckMLAdvancedSettingsFrame.xml
 languages\LocalizationRaidItemsLib.lua

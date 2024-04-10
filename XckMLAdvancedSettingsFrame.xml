@@ -4,7 +4,7 @@
     <Frame name="XckMLAdvancedMainSettings" hidden="true"
            enableMouse="true" movable="true">
         <Size>
-            <AbsDimension x="180" y="280"/>
+            <AbsDimension x="180" y="320"/>
         </Size>
         <Anchors>
             <Anchor point="TOP" relativePoint="TOP">
@@ -147,6 +147,56 @@
                     </OnValueChanged>
                 </Scripts>
             </Slider>
+
+            <EditBox name="$parent_SRInput" multiLine="true" letters="5500" autoFocus="false">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent_CountdownTime">
+                        <Offset>
+                            <AbsDimension x="0" y="-20"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Size>
+                    <AbsDimension x="130" y="30"/> <!-- This does nothing, lua has to set dimention for editboxes -->
+                </Size>
+                <TextInsets>
+                  <AbsInset top="3" left="3" right="3" bottom="3"/>
+                </TextInsets>
+                <FontString inherits="ChatFontNormal">
+                    <FontHeight>
+                        <AbsValue val="28"/>
+                    </FontHeight>
+                </FontString>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                  edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+                    <TileSize>
+                        <AbsValue val="10"/>
+                    </TileSize>
+                    <EdgeSize>
+                        <AbsValue val="10"/>
+                    </EdgeSize>
+                    <BackgroundInsets>
+                        <AbsInset top="3" left="3" right="3" bottom="3"/>
+                    </BackgroundInsets>
+                    <Color r="0" g="0" b="0" a="1"/>
+                </Backdrop>
+                <Scripts>
+                    <OnEscapePressed>
+                        this:ClearFocus()
+                    </OnEscapePressed>
+                    <OnLoad>
+                        XckMLAdvancedLUA.SRInputFrame = this
+                        <!-- this:SetPoint("TOPLEFT","$parent_CountdownTime","TOPLEFT",0,0) -->
+                        <!-- this:SetPoint("BOTTOMRIGHT","$parent_CountdownTime","BOTTOMLEFT",130,-40) -->
+                    </OnLoad>
+                    <!-- <OnEditFocusLost>
+                      this:SetPoint("BOTTOMRIGHT","$parent_CountdownTime","BOTTOMLEFT",130,-40)
+                    </OnEditFocusLost>
+                    <OnEditFocusGained>
+                      this:SetPoint("BOTTOMRIGHT","$parent_CountdownTime","BOTTOMLEFT", 250,-180)
+                    </OnEditFocusGained> -->
+                </Scripts>
+            </EditBox>
 
             <CheckButton name="$parentAutoLootTrash" checked="false">
                 <Size>
@@ -373,6 +423,25 @@
                     </Shadow>
                 </FontString>
             </Layer>
+            <Layer>
+                <FontString name="$parent_LabelSRInput" font="Fonts\FRIZQT__.TTF">
+                    <Anchors>
+                        <Anchor point="BOTTOM" relativePoint="BOTTOM" relativeTo="$parent_LabelCountdownTime">
+                            <Offset x="0" y="-38"/>
+                        </Anchor>
+                    </Anchors>
+                    <FontHeight>
+                        <AbsValue val="10"/>
+                    </FontHeight>
+                    <Color r="1" g="0.8196079" b="0"/>
+                    <Shadow>
+                        <Color r="0" g="0" b="0"/>
+                        <Offset>
+                            <AbsDimension x="1" y="-1"/>
+                        </Offset>
+                    </Shadow>
+                </FontString>
+            </Layer>
         </Layers>
 
         <Scripts>
@@ -385,6 +454,7 @@
                 XckMLAdvancedMainSettings_LabelQualityList:SetText(XCKMLA_LabelSettingsMinQuality)
                 XckMLAdvancedMainSettings_LabelRollOrNeed:SetText(XCKMLA_LabelSettingsRollorNeed)
                 XckMLAdvancedMainSettings_LabelCountdownTime:SetText(XCKMLA_LabelSettingsCountdownTime)
+                XckMLAdvancedMainSettings_LabelSRInput:SetText(XCKMLA_LabelSettingsSRInput)
 
                 this:RegisterForDrag("LeftButton")
             </OnLoad>

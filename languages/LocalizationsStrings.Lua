@@ -65,6 +65,7 @@ if ( GetLocale() == "frFR" ) then
 	XCKMLA_LabelSettingsMinQuality = "Min Quality Displayed";
 	XCKMLA_LabelSettingsRollorNeed = "Roll/Need Method";
 	XCKMLA_LabelSettingsCountdownTime = "Countdown Time";
+	XCKMLA_LabelSettingsSRInput = "SR Data Input:";
 	XCKMLA_LabelMainPlayerName = "Player Name";
 	XCKMLA_LabelMainRollNeed = "Roll/Need";
 	XCKMLA_ButtonMainGiveAward = "Give to Winner";

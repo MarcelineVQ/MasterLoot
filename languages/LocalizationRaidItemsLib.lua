@@ -106,6 +106,7 @@ if ( GetLocale() == "frFR" ) then
 		"Elemental Fire",
 		"Essence of Fire",
 		"Heart of Fire",
+		"Blood of the Mountain",
 		"Elementium Ore",
 		"Wartorn Cloth Scrap",
 		"Wartorn Leather Scrap",
@@ -113,7 +114,7 @@ if ( GetLocale() == "frFR" ) then
 		"Wartorn Plate Scrap",
 		"Hourglass Sand",
 		"Word of Thawing",
-	        "Small Dream Shard",
-	        "Dreamscale",
+		"Small Dream Shard",
+		"Dreamscale",
 		"Fading Dream Fragment"}
 end		

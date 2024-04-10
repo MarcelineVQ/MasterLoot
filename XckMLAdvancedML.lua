@@ -127,6 +127,9 @@ function XckMLAdvancedLUA:OnLoad(frame)
 	LootFrame:SetScript("OnMouseUp", function () this:StopMovingOrSizing() end)
 	LootFrame:SetScript("OnMouseDown", function () this:StartMoving() end)
 
+	AutoMasterLooter = CreateFrame("Frame","AutoMasterLooter",UIParent)
+	AutoMasterLooter:RegisterEvent("LOOT_OPENED")
+
 	self:Print("Xckbucl MasterLoot Advanced |cff20b2aaFully Loaded |cff49C0C0/loot |rto edit settings")
 end
 
@@ -231,7 +234,6 @@ function XckMLAdvancedLUA:SaveSettings()
     for item,_ in XckMLAdvancedLUA.srData do table.insert(t,item) end
     DEFAULT_CHAT_FRAME:AddMessage("|cff20b2aa->|r |cffffd700".."SRs loaded for: ".. table.concat(t,", ") .."|r|cffead454")
   end
-
 end
 
 -----
@@ -347,35 +349,41 @@ function XckMLAdvancedLUA:AssignDEClicked(buttonFrame)
 		self:Print(XCKMLA_NoPlayerDE)
 		return
 	end
-	
+
 	local disenchanter = XckMLAdvancedLUA.PDez
-	if MasterLootRolls.rollCount == 0 then
+	if (MasterLootRolls.rollCount == 0) then
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_YWillGiveItem..XCKMLA_FORDE..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(disenchanter)..disenchanter.."|cFFF9c31c], |r "..XCKMLA_PressForConfirmAttribDE
 		else
 		self:Print(XCKMLA_WARNINGPRINT)
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_WARNING..XCKMLA_WARNINGDE..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(disenchanter)..disenchanter.."|cFFF9c31c], |r "..XCKMLA_PressForConfirmAttribDE..XCKMLA_WARNING
 	end
-	StaticPopupDialogs["Confirm_Attrib"].OnAccept = function() 
-		
-		for winningPlayerIndex = 1, 40 do
-			if (GetMasterLootCandidate(winningPlayerIndex)) then
-				if (GetMasterLootCandidate(winningPlayerIndex) == disenchanter) then
-					for itemIndex = 1, GetNumLootItems() do
-						local itemLink = GetLootSlotLink(itemIndex)
-						if (itemLink == MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)) then
+
+	for winningPlayerIndex = 1, 40 do
+		if (GetMasterLootCandidate(winningPlayerIndex)) then
+			if (GetMasterLootCandidate(winningPlayerIndex) == disenchanter) then
+				for itemIndex = 1, GetNumLootItems() do
+					local itemLink = GetLootSlotLink(itemIndex)
+					if (itemLink == MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)) then
+						local texture, name, quantity, quality, locked = GetLootSlotInfo(itemIndex)
+						if (quality < MasterLootTable:GetQualityArray(XckMLAdvancedLUA.qualityListSet)) then
+							SendChatMessage(itemLink .. " was sent to " .. disenchanter .. " for DE", 'Raid')
 							GiveMasterLoot(itemIndex, winningPlayerIndex)
-							self:Speak(XCKMLA_DEAnnounceP1.. itemLink .. ", " .. disenchanter .. " was sent item for DE")
-							MasterLootRolls:ClearRollList()
-							return
+							else
+								StaticPopupDialogs["Confirm_Attrib"].OnAccept = function() 
+									self:Speak(XCKMLA_DEAnnounceP1.. itemLink .. ", " .. disenchanter .. " was sent item for DE")
+									GiveMasterLoot(itemIndex, winningPlayerIndex)
+								end
+							StaticPopup_Show("Confirm_Attrib")		
 						end
+						MasterLootRolls:ClearRollList()
+						return
 					end
-					self:Print(XCKMLA_CANNOTFINDITEM .. MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected))
 				end
+				self:Print(XCKMLA_CANNOTFINDITEM .. MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected))
 			end
 		end
-		self:Print(XCKMLA_CANNOTFINDPLAYER .. disenchanter)
 	end
-	StaticPopup_Show("Confirm_Attrib")
+	self:Print(XCKMLA_CANNOTFINDPLAYER .. disenchanter)
 end
 
 --Bank Current Item
@@ -384,6 +392,7 @@ function XckMLAdvancedLUA:AssignBankClicked(buttonFrame)
 		self:Print(XCKMLA_NoPlayerBANK)
 		return
 	end
+
 	local banker = XckMLAdvancedLUA.bank
 	if MasterLootRolls.rollCount == 0 then
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_YWillGiveItem..XCKMLA_FORBANK..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(banker)..banker.."|cFFF9c31c], |r"..XCKMLA_PressForConfirmAttribBank
@@ -391,26 +400,33 @@ function XckMLAdvancedLUA:AssignBankClicked(buttonFrame)
 		self:Print(XCKMLA_WARNINGPRINT)
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_WARNING..XCKMLA_WARNINGBank..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(banker)..banker.."|cFFF9c31c], |r"..XCKMLA_PressForConfirmAttribBank..XCKMLA_WARNING
 	end
-	StaticPopupDialogs["Confirm_Attrib"].OnAccept = function() 
-		
-		for winningPlayerIndex = 1, 40 do
-			if (GetMasterLootCandidate(winningPlayerIndex)) then
-				if (GetMasterLootCandidate(winningPlayerIndex) == banker) then
-					for itemIndex = 1, GetNumLootItems() do
-						local itemLink = GetLootSlotLink(itemIndex)
-						if (itemLink == MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)) then
+
+	for winningPlayerIndex = 1, 40 do
+		if (GetMasterLootCandidate(winningPlayerIndex)) then
+			if (GetMasterLootCandidate(winningPlayerIndex) == banker) then
+				for itemIndex = 1, GetNumLootItems() do
+					local itemLink = GetLootSlotLink(itemIndex)
+					if (itemLink == MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)) then
+						local texture, name, quantity, quality, locked = GetLootSlotInfo(itemIndex)
+						if (quality < MasterLootTable:GetQualityArray(XckMLAdvancedLUA.qualityListSet)) then
+							SendChatMessage(itemLink .." has been sent to " .. banker .." to deposit in the guild bank", 'Raid')
 							GiveMasterLoot(itemIndex, winningPlayerIndex)
-							self:Speak(itemLink .." has been sent to " .. banker .." to deposit in the guild bank")
-							return
+							else
+								StaticPopupDialogs["Confirm_Attrib"].OnAccept = function() 
+									self:Speak(itemLink .." has been sent to " .. banker .." to deposit in the guild bank")
+									GiveMasterLoot(itemIndex, winningPlayerIndex)
+								end
+							StaticPopup_Show("Confirm_Attrib")
 						end
+						MasterLootRolls:ClearRollList()
+						return
 					end
-					self:Print(XCKMLA_CANNOTFINDITEM .. MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected))
 				end
+				self:Print(XCKMLA_CANNOTFINDITEM .. MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected))
 			end
 		end
-		self:Print(XCKMLA_CANNOTFINDPLAYER .. banker)
 	end
-	StaticPopup_Show("Confirm_Attrib")
+	self:Print(XCKMLA_CANNOTFINDPLAYER .. banker)
 end
 
 --Give Loot to Win,er
@@ -495,28 +511,52 @@ function XckMLAdvancedLUA:CheckIsRaidItem(ItemName)
 	return false
 end
 
+-- Check if item is not Bind on Pickup
+function LootSlotIsSoulbound(arg)
+	AMLTooltip:ClearLines()
+	AMLTooltip:SetLootItem(arg)
+	local tooltipScan = getglobal("AMLTooltipTextLeft2")
+	if tooltipScan then
+		local BindingStatus = tooltipScan:GetText()
+		if BindingStatus == "Binds when equipped" or BindingStatus == "Binds when picked up" then
+			-- XckMLAdvancedLUA:Print("BOP or BOE")
+			return nil
+		end
+	end
+	-- XckMLAdvancedLUA:Print("loot")
+	return true
+end
+
 -- AutoLoot Corpse
 function XckMLAdvancedLUA:AutoLootTrash()
+	self:Print(match)
 	local NbPlayers = self:GetNbPlayersRaidParty()
 	for li = 1, GetNumLootItems() do 
 		local texture, name, quantity, quality, locked = GetLootSlotInfo(li)
-		
 		if XckMLAdvancedMainSettingsAutoLootRaidsItem:GetChecked() and XckMLAdvancedLUA:CheckIsRaidItem(name) then
 			for ci = 1, NbPlayers do 
 				if (GetMasterLootCandidate(ci) == XckMLAdvancedLUA.aq_zg_items_guy) then 
 					GiveMasterLoot(li, ci); 
 				end
 			end
-			else
-			if XckMLAdvancedMainSettingsAutoLootTrash:GetChecked() and quality  <= 1 then
-				for ci = 1, NbPlayers do 
-					if (GetMasterLootCandidate(ci) == XckMLAdvancedLUA.poorguy) then 
-						GiveMasterLoot(li, ci); 
+            -- if XckMLAdvancedMainSettingsAutoLootTrash:GetChecked() and quality  <= 1 then
+			
+			elseif XckMLAdvancedMainSettingsAutoLootTrash:GetChecked() and LootSlotIsSoulbound(li) then
+			local match = 0	
+				for key,value in LootedItemsTable do
+					if (key == name) then
+						match = 1
 					end
 				end
-			end
+
+				if (match ~= 1) then
+					for ci = 1, NbPlayers do 
+						if (GetMasterLootCandidate(ci) == XckMLAdvancedLUA.poorguy) then 
+							GiveMasterLoot(li, ci); 
+						end
+					end
+				end
 		end
-		
 	end
 end
 
@@ -951,15 +991,6 @@ function XckMLAdvancedLUA:UpdateCurrentItem()
 				-- 	XckMLAdvancedLUA.LootPrioText = name
 				-- 	-- print(itemIndex)
 				-- end
-<<<<<<< HEAD
-				
-				if(LOOTRES_RESERVES[name]) then
-					XckMLAdvancedLUA.LootPrioText = "SR: "..LOOTRES_RESERVES[name]
-				elseif(loot_prio[name]) then
-					XckMLAdvancedLUA.LootPrioText = loot_prio[name]
-				else
-=======
-
         if XckMLAdvancedLUA.srData[name] then
           local t = {}
           for _,entry in pairs(XckMLAdvancedLUA.srData[name]) do
@@ -969,7 +1000,6 @@ function XckMLAdvancedLUA:UpdateCurrentItem()
         elseif(loot_prio[name]) then
           XckMLAdvancedLUA.LootPrioText = loot_prio[name]
         else
->>>>>>> 9472d88 ([ modify ] allow importing of SR csv)
 					XckMLAdvancedLUA.LootPrioText = name
 				end
 
@@ -1025,9 +1055,9 @@ function MasterLootTable:AddItem(itemLk, slot)
 	--local name, item, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(itemLink)
 	local texture, name, quantity, quality, locked = GetLootSlotInfo(slot)
 	local lootThreshold = GetLootThreshold()
-	if (quality  < MasterLootTable:GetQualityArray(XckMLAdvancedLUA.qualityListSet)) then
-		return
-	end
+	-- if (quality  < MasterLootTable:GetQualityArray(XckMLAdvancedLUA.qualityListSet)) then
+	-- 	return
+	-- end
 	self.lootCount = self.lootCount + 1
 	self.loot[self.lootCount] = {}
 	self.loot[self.lootCount].itemLink = itemLk

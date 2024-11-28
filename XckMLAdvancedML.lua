@@ -310,6 +310,8 @@ function XckMLAdvancedLUA:GetSRData(data)
 				end
 			end
 		end
+		local _, _, gem_sack = string.find(item, "Bag of the Vast Conscious")
+		table.insert(indexedData["Bag of Vast Consciousness"], rowData)
 
 	end
 	return indexedData

@@ -232,6 +232,14 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					<OnClick>
 						XckMLAdvancedLUA:AnnounceItemForNeed(getglobal(this:GetName()))
 					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_AnnounceMainSpec, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
 				</Scripts>
 			</Button>
 			<Button name="$parent_Countdown" inherits="UIPanelButtonTemplate" text="">
@@ -247,6 +255,14 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					<OnClick>
 						XckMLAdvancedLUA:CountdownClicked()
 					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_Countdown, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
 				</Scripts>
 			</Button>
 			
@@ -278,10 +294,18 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					<OnClick>
 						XckMLAdvancedLUA:AssignDEClicked()
 					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_AssignDE, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
 				</Scripts>
 			</Button>
             
-            <Button name="$parent_AssignBank" inherits="UIPanelButtonTemplate" text="">
+			<Button name="$parent_AssignBank" inherits="UIPanelButtonTemplate" text="">
 				<NormalTexture file="Interface\ICONS\INV_Misc_Bag_08"/>
 				<PushedTexture file="Interface\ICONS\INV_Misc_Bag_08"/>
 				<Size><AbsDimension x="20" y="20" /></Size>
@@ -294,6 +318,14 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					<OnClick>
 						XckMLAdvancedLUA:AssignBankClicked()
 					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_AssignBank, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
 				</Scripts>
 			</Button>
 
@@ -312,6 +344,14 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 						MasterLootRolls:ClearRollList()
 						XckMLAdvancedLUA:Print("|cfffbb034|r|cffead454Rolls/Needs Reseted.")
 					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_ResetList, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
 				</Scripts>
 			</Button>
             
@@ -327,10 +367,18 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					<OnClick>
 						XckMLAdvancedLUA:SelectItemClicked(getglobal(this:GetName()))
 					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_CurrentItemTexture, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
 				</Scripts>
 			</Button>
 			
-			<EditBox name="$Parent_lootprio" inherits="InputBoxTemplate" letters="200" autoFocus="false">
+			<EditBox name="$Parent_lootprio" inherits="InputBoxTemplate" autoFocus="false" multiLine="true">
 				<Size>
 					<AbsDimension x="230" y="32"/>
 				</Size>
@@ -345,6 +393,14 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 					<OnTextChanged>
 						XckMLAdvancedLUA["LootPrioText"] = this:GetText()
 					</OnTextChanged>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_LootPrio, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
 				</Scripts>
 			</EditBox> 
 			

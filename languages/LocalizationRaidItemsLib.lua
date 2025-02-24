@@ -108,6 +108,7 @@ if ( GetLocale() == "frFR" ) then
 		"Essence of Fire",
 		"Heart of Fire",
 		"Blood of the Mountain",
+		"Sulfuron Ingot",
 		"Elementium Ore",
 		"Wartorn Cloth Scrap",
 		"Wartorn Leather Scrap",

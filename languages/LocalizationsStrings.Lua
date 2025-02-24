@@ -115,4 +115,15 @@ if ( GetLocale() == "frFR" ) then
 	XCKMLA_RandomizerRaidOnly = "|cffead454Working in Raid Only";
 	XCKMLA_PreAttribCountdown = " 5sc until will go on following Player --> ";
 	XCKMLA_RaidorListRoll = "Do you want made a Random for the Players in the List instead a RaidRoll?";
+	-- tooltips
+	XCKMLA_Tooltip_LootPrio = "Priority to announce the item with";
+	XCKMLA_Tooltip_ResetList = "Clear current rolls";
+	XCKMLA_Tooltip_AssignBank = "Send to Bank";
+	XCKMLA_Tooltip_AssignDE = "Send to DE";
+	XCKMLA_Tooltip_Countdown = "Begin roll countdown";
+	XCKMLA_Tooltip_AnnounceMainSpec = "Announce the item to roll for";
+	XCKMLA_Tooltip_CurrentItemTexture = "Select item to roll for";
+	XCKMLA_Tooltip_AnnounceDrops = "Announce all of the dropped loot";
+	XCKMLA_Tooltip_Settings = "Change settings";
+	XCKMLA_Tooltip_SettingsAL = "Enable Autoloot";
 end

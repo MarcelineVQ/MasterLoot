@@ -198,7 +198,7 @@
                 </Scripts>
             </EditBox>
 
-            <CheckButton name="$parentAutoLootTrash" checked="false">
+            <CheckButton name="$parentAutoLootTrash" checked="true">
                 <Size>
                     <AbsDimension x="32" y="32"/>
                 </Size>
@@ -233,8 +233,14 @@
                     </Layer>
                 </Layers>
                 <Scripts>
-                    <OnClick>
-                    </OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_SettingsAL, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
                 </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
                 <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
@@ -243,7 +249,7 @@
                 <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
             </CheckButton>
 
-            <CheckButton name="$parentAutoLootRaidsItem" checked="false">
+            <CheckButton name="$parentAutoLootRaidsItem" checked="true">
                 <Size>
                     <AbsDimension x="32" y="32"/>
                 </Size>
@@ -277,10 +283,14 @@
                         </FontString>
                     </Layer>
                 </Layers>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+						GameTooltip:SetText(XCKMLA_Tooltip_SettingsAL, 1, 1, 1)
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
                 <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
                 <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>

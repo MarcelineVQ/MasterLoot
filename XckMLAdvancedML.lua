@@ -33,11 +33,11 @@ XckMLAdvancedLUA = {frame = nil,
 	settings_set = false, -- I actually want this local not part of the settings, so that it always pops up once
 	QualityList = {
 		["Poor"] = 0,
-		["Common"]=1,
-		["Uncommon"]=2,
-		["Rare"]=3,
-		["Epic"]=4,
-		["Legendary"]=5,
+		["Common"] = 1,
+		["Uncommon"] = 2,
+		["Rare"] = 3,
+		["Epic"] = 4,
+		["Legendary"] = 5,
 	},
 	LOCAL_RAID_CLASS_COLORS = {
 		["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
@@ -49,19 +49,20 @@ XckMLAdvancedLUA = {frame = nil,
 		["DRUID"] = { r = 1.0, g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
 		["SHAMAN"] = { r = 0.0, g = 0.44, b = 0.87, colorStr = "ff0070de" },
 		["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
-		["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41f3b" },
-		["MONK"] = { r = 0.0, g = 1.00 , b = 0.59, colorStr = "ff00ff96" },
+		["DEATHKNIGHT"] = { r = 0.77, g = 0.12, b = 0.23, colorStr = "ffc41f3b" },
+		["MONK"] = { r = 0.0, g = 1.00, b = 0.59, colorStr = "ff00ff96" },
 	},
 }
 
 
-XckMLAdvancedLUASettings = {ascending = false,
+XckMLAdvancedLUASettings = {
+	ascending = false,
 	enforcelow = true,
 	enforcehigh = true,
 	ignorefixed = true,
 }
-MasterLootTable = {lootCount = 0, loot = {}}
-MasterLootRolls = {rollCount = 0, rolls = {}}
+MasterLootTable = { lootCount = 0, loot = {} }
+MasterLootRolls = { rollCount = 0, rolls = {} }
 
 boss_quest = {}
 
@@ -509,7 +510,7 @@ function XckMLAdvancedLUA:AssignDEClicked(buttonFrame)
 	local disenchanter = XckMLAdvancedLUA.PDez
 	if (MasterLootRolls.rollCount == 0) then
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_YWillGiveItem..XCKMLA_FORDE..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(disenchanter)..disenchanter.."|cFFF9c31c], |r "..XCKMLA_PressForConfirmAttribDE
-		else
+	else
 		self:Print(XCKMLA_WARNINGPRINT)
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_WARNING..XCKMLA_WARNINGDE..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(disenchanter)..disenchanter.."|cFFF9c31c], |r "..XCKMLA_PressForConfirmAttribDE..XCKMLA_WARNING
 	end
@@ -552,7 +553,7 @@ function XckMLAdvancedLUA:AssignBankClicked(buttonFrame)
 	local banker = XckMLAdvancedLUA.bank
 	if MasterLootRolls.rollCount == 0 then
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_YWillGiveItem..XCKMLA_FORBANK..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(banker)..banker.."|cFFF9c31c], |r"..XCKMLA_PressForConfirmAttribBank
-		else
+	else
 		self:Print(XCKMLA_WARNINGPRINT)
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_WARNING..XCKMLA_WARNINGBank..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(banker)..banker.."|cFFF9c31c], |r"..XCKMLA_PressForConfirmAttribBank..XCKMLA_WARNING
 	end
@@ -567,11 +568,11 @@ function XckMLAdvancedLUA:AssignBankClicked(buttonFrame)
 						if (quality < MasterLootTable:GetQualityArray(XckMLAdvancedLUA.qualityListSet)) then
 							SendChatMessage(itemLink .." has been sent to " .. banker .." to deposit in the guild bank", 'Raid')
 							GiveMasterLoot(itemIndex, winningPlayerIndex)
-							else
-								StaticPopupDialogs["Confirm_Attrib"].OnAccept = function() 
-									self:Speak(itemLink .." has been sent to " .. banker .." to deposit in the guild bank")
-									GiveMasterLoot(itemIndex, winningPlayerIndex)
-								end
+						else
+							StaticPopupDialogs["Confirm_Attrib"].OnAccept = function()
+								self:Speak(itemLink .." has been sent to " .. banker .." to deposit in the guild bank")
+								GiveMasterLoot(itemIndex, winningPlayerIndex)
+							end
 							StaticPopup_Show("Confirm_Attrib")
 						end
 						MasterLootRolls:ClearRollList()
@@ -589,7 +590,7 @@ end
 function XckMLAdvancedLUA:AwardLootClicked(buttonFrame)
 	if(MasterLootRolls.winningPlayer == nil) then
 		XckMLAdvancedLUA:Print(XCKMLA_SelectPlayerBeforeAttrib)
-		else
+	else
 		-- self:Speak(MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)..XCKMLA_PreAttribCountdown..MasterLootRolls.winningPlayer)
 		-- self:CountdownClicked()
 		StaticPopupDialogs["Confirm_Attrib"].text = XCKMLA_YWillGiveItem..MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected).." -> |cFFF9c31c[|r|c"..self:GetHexClassColor(MasterLootRolls.winningPlayer)..MasterLootRolls.winningPlayer.."|cFFF9c31c], |r"..XCKMLA_PressForConfirmAttrib
@@ -665,7 +666,7 @@ function XckMLAdvancedLUA:RandomizePlayerInList()
 	local PlayedIDRandomized = math.random(getn(MasterLootRolls.rolls))
 	if(self:PlayerIsInAParty() and not self:PlayerIsInARaid()) then
 		self:Print(XCKMLA_RandomizerRaidOnly)
-		else
+	else
 		self:Speak("[Xckbucl ML Advanced] Player Randomizer In Player List --> N°"..PlayedIDRandomized.." - "..MasterLootRolls.rolls[PlayedIDRandomized].player)
 	end
 end
@@ -771,9 +772,9 @@ function XckMLAdvancedLUA:GetNbPlayersRaidParty()
 	local PlayerNumber = "raid"
 	if(XckMLAdvancedLUA:PlayerIsInAParty() and XckMLAdvancedLUA:PlayerIsInARaid() == false) then
 		PlayerNumber = GetNumPartyMembers()
-		elseif(XckMLAdvancedLUA:PlayerIsInARaid()) then
+	elseif(XckMLAdvancedLUA:PlayerIsInARaid()) then
 		PlayerNumber = GetNumRaidMembers()
-		else
+	else
 		return 0
 	end
 	return PlayerNumber
@@ -784,7 +785,7 @@ function XckMLAdvancedLUA:IsInRaidOrParty()
 	local RaidorParty = "raid"
 	if(XckMLAdvancedLUA:PlayerIsInAParty() and XckMLAdvancedLUA:PlayerIsInARaid() == false) then
 		RaidorParty = "party"
-		elseif(XckMLAdvancedLUA:PlayerIsInARaid()) then
+	elseif(XckMLAdvancedLUA:PlayerIsInARaid()) then
 		RaidorParty = "raid"
 	end
 	return RaidorParty
@@ -794,7 +795,7 @@ end
 function MasterLootRolls:LessThan(i1, v1, i2, v2)
 	if (v1 > v2) then
 		return false
-		elseif (v1 == v2) then
+	elseif (v1 == v2) then
 		return i1 < i2
 	end
 	return true
@@ -804,7 +805,7 @@ end
 function MasterLootRolls:GreaterThan(i1, v1, i2, v2)
 	if (v1 < v2) then
 		return false
-		elseif (v1 == v2) then
+	elseif (v1 == v2) then
 		return i1 > i2
 	end
 	return true
@@ -816,7 +817,7 @@ function XckMLAdvancedLUA:ToggleMLLootFrameButtons()
 		BSettings:Show()
 		BAnnounceDrops:Show()
 		NinjaAllItems:Show()
-		else
+	else
 		BSettings:Hide()
 		BAnnounceDrops:Hide()
 		NinjaAllItems:Hide()
@@ -849,23 +850,23 @@ function XckMLAdvancedLUA:HandlePossibleRoll(message, sender)
 			XckMLAdvancedLUASettings.ascending = true
 			if string.find(message, "+1") and not string.find(message, "||") then
 				player, roll, minRoll, maxRoll = sender,"1", "1", "100"
-				elseif string.find(message, "+2")  and not string.find(message, "||") then
+			elseif string.find(message, "+2")  and not string.find(message, "||") then
 				player, roll, minRoll, maxRoll = sender,"2", "1", "100"
-				elseif string.find(message, "+3") and not string.find(message, "||") then
+			elseif string.find(message, "+3") and not string.find(message, "||") then
 				player, roll, minRoll, maxRoll = sender,"3", "1", "100"
 			end
-			elseif(XckMLAdvancedLUA.RollorNeed == "Roll") then
+		elseif(XckMLAdvancedLUA.RollorNeed == "Roll") then
 			XckMLAdvancedLUASettings.ascending = false
 			if (string.find(message, rollPattern)) then
 				_, _, player, roll, minRoll, maxRoll = string.find(message, rollPattern)
 			end
 		end
-			if ((minRoll == "1" or not XckMLAdvancedLUASettings.enforcelow) and
-				(maxRoll == "100" or not XckMLAdvancedLUASettings.enforcehigh) and
-			(minRoll ~= maxRoll or not XckMLAdvancedLUASettings.ignorefixed)) then
-			MasterLootRolls:AddRoll(player, tonumber(roll+100))
+		if ((minRoll == "1" or not XckMLAdvancedLUASettings.enforcelow) and
+			(maxRoll == "100" or not XckMLAdvancedLUASettings.enforcehigh) and
+		(minRoll ~= maxRoll or not XckMLAdvancedLUASettings.ignorefixed)) then
+		MasterLootRolls:AddRoll(player, tonumber(roll+100))
 		end
-			if ((minRoll == "1") and
+		if ((minRoll == "1") and
 			(maxRoll == "99") and
 			(minRoll ~= maxRoll)) then
 			MasterLootRolls:AddRoll(player, tonumber(roll))
@@ -884,10 +885,9 @@ function MasterLootRolls:AddRoll(player, roll, prio)
 	self.rolls[self.rollCount] = {}
 	self.rolls[self.rollCount].player = player
 	self.rolls[self.rollCount].roll = roll
-	
-	
+
 	self:UpdateTopRoll()
-	
+
 	self:UpdateRollList()
 end
 
@@ -896,7 +896,7 @@ function MasterLootRolls:UpdateTopRoll()
 	local highestRoll
 	if (not XckMLAdvancedLUASettings.ascending) then
 		highestRoll = 0
-		else
+	else
 		highestRoll = 1000001
 	end
 	for rollIndex = 1, self.rollCount do
@@ -949,7 +949,7 @@ function MasterLootRolls:UpdateRollList()
 	local lastRollValue
 	if (not XckMLAdvancedLUASettings.ascending) then
 		lastRollValue = 1000001 --max /roll is 1,000,000
-		else
+	else
 		lastRollValue = 0
 	end
 	-- Sort on the fly-ish
@@ -958,7 +958,7 @@ function MasterLootRolls:UpdateRollList()
 		local highestRollValue
 		if (not XckMLAdvancedLUASettings.ascending) then
 			highestRollValue = 0
-			else
+		else
 			highestRollValue = 1000001 --max /roll is 1,000,000
 		end
 		-- Find the highest roll that is also less than the previously show roll
@@ -967,18 +967,18 @@ function MasterLootRolls:UpdateRollList()
 			local rollValue = self:GetPlayerRoll(rollIndex)
 			if ((self:LessThan(rollIndex, rollValue, lastRollIndex, lastRollValue) and not XckMLAdvancedLUASettings.ascending) or
 			(self:GreaterThan(rollIndex, rollValue, lastRollIndex, lastRollValue) and XckMLAdvancedLUASettings.ascending)) then
-			if ((self:GreaterThan(rollIndex, rollValue, highestRollIndex, highestRollValue) and not XckMLAdvancedLUASettings.ascending) or
-			(self:LessThan(rollIndex, rollValue, highestRollIndex, highestRollValue) and XckMLAdvancedLUASettings.ascending)) then
-			highestRollIndex = rollIndex
-			highestRollValue = rollValue
-			end
+				if ((self:GreaterThan(rollIndex, rollValue, highestRollIndex, highestRollValue) and not XckMLAdvancedLUASettings.ascending) or
+				(self:LessThan(rollIndex, rollValue, highestRollIndex, highestRollValue) and XckMLAdvancedLUASettings.ascending)) then
+					highestRollIndex = rollIndex
+					highestRollValue = rollValue
+				end
 			end
 		end
 
 		if lastRollValue == highestRollValue then
 			tiedroll = 1
 			tiedPlayerIndex = lastRollIndex
-			else
+		else
 			tiedroll = 0
 		end		
 
@@ -1025,7 +1025,7 @@ function MasterLootRolls:UpdateRollList()
 		local starTexture = getglobal(buttonName .. "_StarTexture")
 		if (playerName == self.winningPlayer) then
 			starTexture:Show()
-			else
+		else
 			starTexture:Hide()
 		end
 		
@@ -1033,15 +1033,15 @@ function MasterLootRolls:UpdateRollList()
 		local playerRollLabel = getglobal(buttonName .. "_PlayerRoll")
 		if(XckMLAdvancedLUA.RollorNeed == "Need") then
 			playerRollLabel:SetText("+"..playerRoll)
-			elseif(XckMLAdvancedLUA.RollorNeed == "Roll") then
-				if tiedroll == 1 then
+		elseif(XckMLAdvancedLUA.RollorNeed == "Roll") then
+			if tiedroll == 1 then
 				playerRollLabel:SetText("Tie: ".. playerRoll)
 				playerRollLabel:SetTextColor(1, 0, 0)
 				buttonName = "PlayerSelectionButton" .. tiedPlayerIndex
 				playerRollLabel = getglobal(buttonName .. "_PlayerRoll")
 				playerRollLabel:SetText("Tie: ".. playerRoll)
 				playerRollLabel:SetTextColor(1, 0, 0)				
-				else
+			else
 				playerRollLabel:SetText(playerRoll)
 				playerRollLabel:SetTextColor(1, 1, 1)	
 			end
@@ -1093,7 +1093,6 @@ function XckMLAdvancedLUA:FillLootTable()
 			XckMLAdvancedLUA.bosslootname = name
 		end
 	end
-
 
 	if MasterLootTable:GetItemCount() >= 1 then
 		for lootIndex = 1, GetNumLootItems() do
@@ -1237,15 +1236,13 @@ function XckMLAdvancedLUA:UpdateCurrentItem()
 				-- end
 				if XckMLAdvancedLUA.srData[name] then
 					local t = {}
-						for _,entry in pairs(XckMLAdvancedLUA.srData[name]) do
+					for _,entry in pairs(XckMLAdvancedLUA.srData[name]) do
 						table.insert(t,entry.attendee)
-						end
+					end
 					XckMLAdvancedLUA.LootPrioText = "SR: " .. table.concat(t," / ")
-					
-					elseif(loot_prio[name]) then
+				elseif(loot_prio[name]) then
 					XckMLAdvancedLUA.LootPrioText = loot_prio[name]
-					
-					else
+				else
 					XckMLAdvancedLUA.LootPrioText = name
 				end
 
@@ -1442,7 +1439,7 @@ end
 function XckMLAdvancedLUA:InitRollOrNeedDropDown()
 	local RollNeedChoice = {
 		["Roll"] = 0,
-		["Need"]=1,
+		["Need"] = 1,
 	}
 	if (UIDROPDOWNMENU_MENU_LEVEL == 1) then
 		for key, value in pairs(RollNeedChoice) do
@@ -1519,7 +1516,7 @@ function XckMLAdvancedLUA:InitAllLootFrameFrame()
 		if(XckMLAdvancedMainSettings:IsShown() == nil) then
 			XckMLAdvancedMainSettings:SetPoint("LEFT","LootFrame","RIGHT",-50,0)
 			XckMLAdvancedMainSettings:Show();
-			else
+		else
 			XckMLAdvancedMainSettings:Hide();
 		end
 	end)
@@ -1594,8 +1591,7 @@ function XckMLAdvancedLUA:InitButtonLootAllItems()
 			if(XckMLAdvancedLUA.ConfirmNinja == nil) then
 				XckMLAdvancedLUA.ConfirmNinja = 1
 				self:Print(XCKMLA_NinjaButtonMSGConfirm)
-				elseif (XckMLAdvancedLUA.ConfirmNinja == 1) then
-				
+			elseif (XckMLAdvancedLUA.ConfirmNinja == 1) then
 				for li = 1, GetNumLootItems() do 
 					local texture, name, quantity, quality, locked = GetLootSlotInfo(li)
 					
@@ -1605,7 +1601,7 @@ function XckMLAdvancedLUA:InitButtonLootAllItems()
 								GiveMasterLoot(li, ci); 
 							end
 						end
-						else
+					else
 						if quality  <= 1 then
 							for ci = 1, NbPlayers do 
 								if (GetMasterLootCandidate(ci) == XckMLAdvancedLUA.poorguy) then 
@@ -1621,8 +1617,7 @@ function XckMLAdvancedLUA:InitButtonLootAllItems()
 					end 
 					XckMLAdvancedLUA.ConfirmNinja = nil
 				end
-				
-				else
+			else
 				self:Print(XCKMLA_PAreNotML)
 			end
 		end
@@ -1664,20 +1659,23 @@ end
 ------- POP Confirm StaticPopup_Show("Confirm_Attrib")  MasterLootRolls:AddRoll("Xckbucl", "+1")
 -------
 StaticPopupDialogs["Confirm_Attrib"] = {
-	
 	text = XCKMLA_NothingTextPopup,
 	button1 = XCKMLA_YESButton,
 	button2 = XCKMLA_NOButton,
 	OnAlt = function ()
 		VideoOptionsFrame_SetCurrentToDefaults();
 	end,
-OnCancel = function() end,
-showAlert = 1,
-OnAccept = function() end,
-timeout = 0,
-whileDead = true,
-hideOnEscape = true,
-hasItemFrame = true,
-preferredIndex = 3,
-OnShow = function() getglobal(this:GetName().."AlertIcon"):SetPoint("LEFT", 20, 0) getglobal(this:GetName().."AlertIcon"):SetTexture(MasterLootTable:GetItemTexture2(XckMLAdvancedLUA.currentItemSelectedtexture)) getglobal(this:GetName().."AlertIcon"):SetWidth(40) getglobal(this:GetName().."AlertIcon"):SetHeight(40) end,
-}																																																		
+	OnCancel = function() end,
+	showAlert = 1,
+	OnAccept = function() end,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	hasItemFrame = true,
+	preferredIndex = 3,
+	OnShow = function()
+		getglobal(this:GetName().."AlertIcon"):SetPoint("LEFT", 20, 0)
+		getglobal(this:GetName().."AlertIcon"):SetTexture(MasterLootTable:GetItemTexture2(XckMLAdvancedLUA.currentItemSelectedtexture))
+		getglobal(this:GetName().."AlertIcon"):SetWidth(40) getglobal(this:GetName().."AlertIcon"):SetHeight(40)
+	end,
+}

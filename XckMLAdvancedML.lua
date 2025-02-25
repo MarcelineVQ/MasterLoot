@@ -94,7 +94,6 @@ end
 local orig_ReloadUI = ReloadUI
 ReloadUI = function (a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
 	if XckMLAdvancedLUA then XckMLAdvancedLUA.reloading = true end
-	-- MasterLootManagerSettings.temp_sr = XckMLAdvancedLUA.srData
 	orig_ReloadUI(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
 end
 -----
@@ -289,26 +288,39 @@ function XckMLAdvancedLUA:OnEvent(self, event)
 	elseif (event == "PLAYER_ENTERING_WORLD") then
 		MasterLootManagerSettings = MasterLootManagerSettings or {}
 		if MasterLootManagerSettings.guildmembersdb then guildmembersdb = MasterLootManagerSettings.guildmembersdb end
-		if MasterLootManagerSettings.PDez then XckMLAdvancedLUA.PDez = MasterLootManagerSettings.PDez end
-		if MasterLootManagerSettings.bank then XckMLAdvancedLUA.bank = MasterLootManagerSettings.bank end
-		if MasterLootManagerSettings.poorguy then XckMLAdvancedLUA.poorguy = MasterLootManagerSettings.poorguy end
-		if MasterLootManagerSettings.aq_zg_items_guy then XckMLAdvancedLUA.aq_zg_items_guy = MasterLootManagerSettings.aq_zg_items_guy end
-		if MasterLootManagerSettings.qualityListSet then XckMLAdvancedLUA.qualityListSet = MasterLootManagerSettings.qualityListSet end
-		if MasterLootManagerSettings.RollorNeed then XckMLAdvancedLUA.RollorNeed = MasterLootManagerSettings.RollorNeed end
-		if MasterLootManagerSettings.countdownStartTime then XckMLAdvancedLUA.countdownStartTime = MasterLootManagerSettings.countdownStartTime end
+		if MasterLootManagerSettings.PDez then
+			XckMLAdvancedLUA.PDez = MasterLootManagerSettings.PDez
+			UIDropDownMenu_SetText(XckMLAdvancedLUA.PDez, XckMLAdvancedLUA.deDropdownFrame)
+		end
+		if MasterLootManagerSettings.bank then
+			XckMLAdvancedLUA.bank = MasterLootManagerSettings.bank
+			UIDropDownMenu_SetText(XckMLAdvancedLUA.bank, XckMLAdvancedLUA.bankDropdownFrame)
+		end
+		if MasterLootManagerSettings.poorguy then
+			XckMLAdvancedLUA.poorguy = MasterLootManagerSettings.poorguy
+			UIDropDownMenu_SetText(XckMLAdvancedLUA.poorguy, XckMLAdvancedLUA.poorguyDropdownFrame)
+		end
+		if MasterLootManagerSettings.aq_zg_items_guy then
+			XckMLAdvancedLUA.aq_zg_items_guy = MasterLootManagerSettings.aq_zg_items_guy
+			UIDropDownMenu_SetText(XckMLAdvancedLUA.aq_zg_items_guy, XckMLAdvancedLUA.aq_zg_items_guyDropdownFrame)
+		end
+		if MasterLootManagerSettings.qualityListSet then
+			XckMLAdvancedLUA.qualityListSet = MasterLootManagerSettings.qualityListSet
+			UIDropDownMenu_SetText(XckMLAdvancedLUA.qualityListSet, XckMLAdvancedLUA.qualityListDropdownFrame)
+		end
+		if MasterLootManagerSettings.RollorNeed then
+			XckMLAdvancedLUA.RollorNeed = MasterLootManagerSettings.RollorNeed
+			UIDropDownMenu_SetText(XckMLAdvancedLUA.RollorNeed, XckMLAdvancedLUA.RollorNeedDropdownFrame)
+		end
+		if MasterLootManagerSettings.countdownStartTime then
+			XckMLAdvancedLUA.countdownStartTime = MasterLootManagerSettings.countdownStartTime
+			XckMLAdvancedLUA.CountDownTimeFrame:SetValue(XckMLAdvancedLUA.countdownStartTime)
+		end
 		if MasterLootManagerSettings.looterfaction then XckMLAdvancedLUA.looterfaction = MasterLootManagerSettings.looterfaction end
 		if MasterLootManagerSettings.temp_sr then
 			XckMLAdvancedLUA.srData = MasterLootManagerSettings.temp_sr
 			MasterLootManagerSettings.temp_sr = nil
 		end
-
-		UIDropDownMenu_SetText(XckMLAdvancedLUA.PDez, XckMLAdvancedLUA.deDropdownFrame)
-		UIDropDownMenu_SetText(XckMLAdvancedLUA.bank, XckMLAdvancedLUA.bankDropdownFrame)
-		UIDropDownMenu_SetText(XckMLAdvancedLUA.poorguy, XckMLAdvancedLUA.poorguyDropdownFrame)
-		UIDropDownMenu_SetText(XckMLAdvancedLUA.aq_zg_items_guy, XckMLAdvancedLUA.aq_zg_items_guyDropdownFrame)
-		UIDropDownMenu_SetText(XckMLAdvancedLUA.qualityListSet, XckMLAdvancedLUA.qualityListDropdownFrame)
-		UIDropDownMenu_SetText(XckMLAdvancedLUA.RollorNeed, XckMLAdvancedLUA.RollorNeedDropdownFrame)
-		XckMLAdvancedLUA.CountDownTimeFrame:SetValue(XckMLAdvancedLUA.countdownStartTime)
 
 		self:UpdateDropdowns()
 	elseif (event == "PLAYER_LOGOUT") then

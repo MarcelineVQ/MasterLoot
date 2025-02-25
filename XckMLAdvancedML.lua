@@ -54,17 +54,23 @@ XckMLAdvancedLUA = {frame = nil,
 	},
 }
 
-
 XckMLAdvancedLUASettings = {
 	ascending = false,
-	enforcelow = true,
-	enforcehigh = true,
+	enforcelow = false,
+	enforcehigh = false,
 	ignorefixed = true,
 }
 MasterLootTable = { lootCount = 0, loot = {} }
 MasterLootRolls = { rollCount = 0, rolls = {} }
 
 boss_quest = {}
+
+local rollQualities = {
+	{ tag = "SR", color = "ffff0000", condition = function(max) return max > 100 end },
+	{ tag = "MS", color = "ffffff00", condition = function(max) return max == 100 end },
+	{ tag = "OS", color = "ff00ff00", condition = function(max) return max == 99 end },
+	{ tag = "XM", color = "ff00ffff", condition = function(max) return max < 99 end },
+}
 
 ----- INIT DEBUG COMMAND INGAME
 SLASH_XCKMLA1, SLASH_XCKMLA2, SLASH_XCKMLA3 = "/XckMLAdvanced", "/Xckmla", "/loot"
@@ -932,20 +938,20 @@ function XckMLAdvancedLUA:HandlePossibleRoll(message, sender)
 			end
 		end
 		if ((minRoll == "1" or not XckMLAdvancedLUASettings.enforcelow) and
-			(maxRoll == "100" or not XckMLAdvancedLUASettings.enforcehigh) and
-		(minRoll ~= maxRoll or not XckMLAdvancedLUASettings.ignorefixed)) then
-		MasterLootRolls:AddRoll(player, tonumber(roll+100))
+				(maxRoll == "100" or not XckMLAdvancedLUASettings.enforcehigh) and
+				(minRoll ~= maxRoll or not XckMLAdvancedLUASettings.ignorefixed)) then
+			MasterLootRolls:AddRoll(player, tonumber(roll), tonumber(maxRoll))
 		end
 		if ((minRoll == "1") and
 			(maxRoll == "99") and
 			(minRoll ~= maxRoll)) then
-			MasterLootRolls:AddRoll(player, tonumber(roll))
+			MasterLootRolls:AddRoll(player, tonumber(roll), tonumber(maxRoll))
 		end
 	end
 end
 
 -- Add Roll to Array Variable
-function MasterLootRolls:AddRoll(player, roll, prio)
+function MasterLootRolls:AddRoll(player, roll, maxRoll)
 	for rollIndex = 1, self.rollCount do
 		if (self.rolls[rollIndex].player == player) then
 			return
@@ -955,6 +961,7 @@ function MasterLootRolls:AddRoll(player, roll, prio)
 	self.rolls[self.rollCount] = {}
 	self.rolls[self.rollCount].player = player
 	self.rolls[self.rollCount].roll = roll
+	self.rolls[self.rollCount].max = maxRoll or 100
 
 	self:UpdateTopRoll()
 
@@ -983,7 +990,7 @@ end
 
 -- Get Player Roll Amount
 function MasterLootRolls:GetPlayerRoll(rollIndex)
-	return self.rolls[rollIndex].roll
+	return self.rolls[rollIndex].roll, self.rolls[rollIndex].max
 end
 
 -- Get Name of Player Rolled
@@ -1016,36 +1023,56 @@ function MasterLootRolls:UpdateRollList()
 	
 	local tiedroll = 0
 	local lastRollIndex = 0
-	local lastRollValue
+	local lastRollValue, lastRollMax
 	if (not XckMLAdvancedLUASettings.ascending) then
 		lastRollValue = 1000001 --max /roll is 1,000,000
+		lastRollMax = 1000001
 	else
 		lastRollValue = 0
+		lastRollMax = 0
 	end
-	-- Sort on the fly-ish
+
+	-- Loop through all rolls to build a sorted list
 	for i = 1, self.rollCount do
 		local highestRollIndex = 0
-		local highestRollValue
-		if (not XckMLAdvancedLUASettings.ascending) then
+		local highestRollValue, highestRollMax
+		if (not ascending) then
 			highestRollValue = 0
+			highestRollMax = 0
 		else
-			highestRollValue = 1000001 --max /roll is 1,000,000
+			highestRollValue = 1000001
+			highestRollMax = 1000001
 		end
-		-- Find the highest roll that is also less than the previously show roll
-		-- Reverse for ascending
+
+		-- Iterate over all player rolls
 		for rollIndex = 1, self.rollCount do
-			local rollValue = self:GetPlayerRoll(rollIndex)
-			if ((self:LessThan(rollIndex, rollValue, lastRollIndex, lastRollValue) and not XckMLAdvancedLUASettings.ascending) or
-			(self:GreaterThan(rollIndex, rollValue, lastRollIndex, lastRollValue) and XckMLAdvancedLUASettings.ascending)) then
-				if ((self:GreaterThan(rollIndex, rollValue, highestRollIndex, highestRollValue) and not XckMLAdvancedLUASettings.ascending) or
-				(self:LessThan(rollIndex, rollValue, highestRollIndex, highestRollValue) and XckMLAdvancedLUASettings.ascending)) then
-					highestRollIndex = rollIndex
-					highestRollValue = rollValue
+			local rollValue, rollMax = self:GetPlayerRoll(rollIndex)
+			-- Only consider rolls that are "below" the previous one.
+			-- For descending order, we want candidates with a lower (or equal) rollMax,
+			-- and if the same rollMax, a lower rollValue than the last shown.
+			if not ascending then
+				if (rollMax < lastRollMax) or (rollMax == lastRollMax and rollValue < lastRollValue) then
+					-- Among those, choose the candidate with the highest values.
+					if (rollMax > highestRollMax) or (rollMax == highestRollMax and rollValue > highestRollValue) then
+						highestRollIndex = rollIndex
+						highestRollValue = rollValue
+						highestRollMax = rollMax
+					end
+				end
+			else
+				-- In ascending order, reverse the comparisons.
+				if (rollMax > lastRollMax) or (rollMax == lastRollMax and rollValue > lastRollValue) then
+					if (rollMax < highestRollMax) or (rollMax == highestRollMax and rollValue < highestRollValue) then
+						highestRollIndex = rollIndex
+						highestRollValue = rollValue
+						highestRollMax = rollMax
+					end
 				end
 			end
 		end
 
-		if lastRollValue == highestRollValue then
+		-- If the current candidate has the same roll and same rollMax as the previous one, mark as tied.
+		if lastRollValue == highestRollValue and lastRollMax == highestRollMax then
 			tiedroll = 1
 			tiedPlayerIndex = lastRollIndex
 		else
@@ -1054,6 +1081,7 @@ function MasterLootRolls:UpdateRollList()
 
 		lastRollIndex = highestRollIndex
 		lastRollValue = highestRollValue
+		lastRollMax = highestRollMax
 		
 		local buttonName = "PlayerSelectionButton" .. lastRollIndex
 		local rollFrame = getglobal(buttonName) or CreateFrame("Button", buttonName, scrollChild, "PlayerSelectionButtonTemplate")
@@ -1098,22 +1126,29 @@ function MasterLootRolls:UpdateRollList()
 		else
 			starTexture:Hide()
 		end
-		
+
+		local rollTag
+		for _, rule in ipairs(rollQualities) do
+			if rule.condition(highestRollMax) then
+				rollTag = rule
+				break
+			end
+		end
 		local playerRoll = lastRollValue
 		local playerRollLabel = getglobal(buttonName .. "_PlayerRoll")
 		if(XckMLAdvancedLUA.RollorNeed == "Need") then
 			playerRollLabel:SetText("+"..playerRoll)
 		elseif(XckMLAdvancedLUA.RollorNeed == "Roll") then
 			if tiedroll == 1 then
-				playerRollLabel:SetText("Tie: ".. playerRoll)
-				playerRollLabel:SetTextColor(1, 0, 0)
-				buttonName = "PlayerSelectionButton" .. tiedPlayerIndex
-				playerRollLabel = getglobal(buttonName .. "_PlayerRoll")
-				playerRollLabel:SetText("Tie: ".. playerRoll)
-				playerRollLabel:SetTextColor(1, 0, 0)				
+				playerRollLabel:SetTextColor(0, 1, 0)
+				-- buttonName = "PlayerSelectionButton" .. tiedPlayerIndex
+				playerRollLabel:SetText("Tie: |c" .. rollTag.color .. playerRoll .. " (" .. rollTag.tag .. ")|r")
+				-- playerRollLabel = getglobal(buttonName .. "_PlayerRoll")
+				-- playerRollLabel:SetText("Tie: ".. playerRoll)
+				-- playerRollLabel:SetTextColor(1, 0, 0)
 			else
-				playerRollLabel:SetText(playerRoll)
-				playerRollLabel:SetTextColor(1, 1, 1)	
+				playerRollLabel:SetTextColor(1, 1, 1)
+				playerRollLabel:SetText("|c" .. rollTag.color .. playerRoll .. " (" .. rollTag.tag .. ")|r")
 			end
 		end
 		

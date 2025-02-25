@@ -132,8 +132,8 @@
                 <Scripts>
                     <OnLoad>
                         XckMLAdvancedLUA.CountDownTimeFrame = this
-                        this:SetMinMaxValues(5, 60)
-                        this:SetValueStep(5)
+                        this:SetMinMaxValues(1, 60)
+                        this:SetValueStep(1)
                     </OnLoad>
                     <OnShow>
                         XckMLAdvancedMainSettings_LabelCountdownTime:SetText(XCKMLA_LabelSettingsCountdownTime .. " " ..
@@ -233,14 +233,14 @@
                     </Layer>
                 </Layers>
                 <Scripts>
-					<OnEnter>
-						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(XCKMLA_Tooltip_SettingsAL, 1, 1, 1)
-						GameTooltip:Show()
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+                        GameTooltip:SetText(XCKMLA_Tooltip_SettingsAL, 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
                 </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
                 <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
@@ -283,14 +283,16 @@
                         </FontString>
                     </Layer>
                 </Layers>
-					<OnEnter>
-						GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
-						GameTooltip:SetText(XCKMLA_Tooltip_SettingsAL, 1, 1, 1)
-						GameTooltip:Show()
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
+                <Scripts>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT")
+                        GameTooltip:SetText(XCKMLA_Tooltip_SettingsAL, 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
                 <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
                 <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
@@ -477,6 +479,13 @@
             <OnHide>
                 XckMLAdvancedLUA:SaveSettings()
             </OnHide>
+            <OnShow>
+                if not Util.isTableEmpty(XckMLAdvancedLUA.srData) then
+                    XckMLAdvancedMainSettings_LabelSRInput:SetText(XCKMLA_LabelSettingsSRInput.." (Loaded)")
+                else
+                    XckMLAdvancedMainSettings_LabelSRInput:SetText(XCKMLA_LabelSettingsSRInput)
+                end
+            </OnShow>
         </Scripts>
     </Frame>
 </Ui>

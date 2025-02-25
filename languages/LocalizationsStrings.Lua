@@ -61,7 +61,7 @@ if ( GetLocale() == "frFR" ) then
 	XCKMLA_LabelSettingsPlayerDE = "Player DE";
 	XCKMLA_LabelSettingsPlayerBank = "Player Bank";
 	XCKMLA_LabelSettingsPlayerPoor = "Player Trash";
-	XCKMLA_LabelSettingsPlayerRaidsItems = "Player Raids Items";
+	XCKMLA_LabelSettingsPlayerRaidsItems = "Player Raid Mats";
 	XCKMLA_LabelSettingsMinQuality = "Min Quality Displayed";
 	XCKMLA_LabelSettingsRollorNeed = "Roll/Need Method";
 	XCKMLA_LabelSettingsCountdownTime = "Countdown Time";

@@ -5,7 +5,7 @@
 ## Notes: Eases the stresses of passing out loot.
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariables: MasterLootManagerSettings
+## SavedVariablesPerCharacter: MasterLootManagerSettings
 languages\LocalizationsStrings.lua
 bossquest.lua
 lootprio.lua

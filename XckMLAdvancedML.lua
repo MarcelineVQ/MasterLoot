@@ -84,6 +84,21 @@ function XckMLAdvancedLUA:Print(str)
 	DEFAULT_CHAT_FRAME:AddMessage(str)
 end
 
+------
+------ HOOKS
+------
+
+----- HOOK RELOADUI TO KEEP SETTINGS
+-- SR settings are intentionally not kept between logins to keep stale data from causing issues
+-- but we should keep them between reloads
+local orig_ReloadUI = ReloadUI
+ReloadUI = function (a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
+	if XckMLAdvancedLUA then XckMLAdvancedLUA.reloading = true end
+	-- MasterLootManagerSettings.temp_sr = XckMLAdvancedLUA.srData
+	orig_ReloadUI(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
+end
+-----
+
 ----- HOOK LOOTFRAME TO SEE MORE AT ONCE
 LOOTFRAME_NUMBUTTONS = 10
 
@@ -192,6 +207,7 @@ function XckMLAdvancedLUA:OnLoad(frame)
 	self.frame:RegisterEvent("LOOT_SLOT_CLEARED")
 	self.frame:RegisterEvent("RAID_ROSTER_UPDATE")
 	self.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self.frame:RegisterEvent("PLAYER_LOGOUT")
 	
 	self.frame:SetScript("OnEvent", function()
 		self:OnEvent(self, event)
@@ -248,30 +264,58 @@ function XckMLAdvancedLUA:OnEvent(self, event)
 			XckMLAdvancedMain:Show()
 		end
 		XckMLAdvancedLUA:AutoLootTrash()
-		elseif (event == "LOOT_CLOSED" and self:PlayerIsMasterLooter()) then
+	elseif (event == "LOOT_CLOSED" and self:PlayerIsMasterLooter()) then
 		if(SelectFrame) then
-			if(SelectFrame:IsShown() ==1) then
+			if(SelectFrame:IsShown() == 1) then
 				SelectFrame:Hide()
 			end
 		end
 		XckMLAdvancedMain:Hide()
 		XckMLAdvancedLUA.ConfirmNinja = nil
 		XckMLAdvancedLUA.ConfirAttrib = nil
-		elseif (event == "LOOT_SLOT_CLEARED" and self:PlayerIsMasterLooter()) then
+	elseif (event == "LOOT_SLOT_CLEARED" and self:PlayerIsMasterLooter()) then
 		self:FillLootTable()
 		self:UpdateSelectionFrame()
 		if (MasterLootTable.lootCount > 0) then
 			XckMLAdvancedMain:Show()
-			else
+		else
 			XckMLAdvancedMain:Hide()
-		end		
-		elseif (event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" or event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_SYSTEM") then
+		end
+	elseif (event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_PARTY_LEADER" or event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_SYSTEM") then
 		local message, sender= arg1, arg2;
 		self:HandlePossibleRoll(message, sender)
-		elseif (event == "RAID_ROSTER_UPDATE") then
+	elseif (event == "RAID_ROSTER_UPDATE") then
 		self:UpdateDropdowns()
-		elseif (event == "PLAYER_ENTERING_WORLD") then
+	elseif (event == "PLAYER_ENTERING_WORLD") then
+		MasterLootManagerSettings = MasterLootManagerSettings or {}
+		if MasterLootManagerSettings.guildmembersdb then guildmembersdb = MasterLootManagerSettings.guildmembersdb end
+		if MasterLootManagerSettings.PDez then XckMLAdvancedLUA.PDez = MasterLootManagerSettings.PDez end
+		if MasterLootManagerSettings.bank then XckMLAdvancedLUA.bank = MasterLootManagerSettings.bank end
+		if MasterLootManagerSettings.poorguy then XckMLAdvancedLUA.poorguy = MasterLootManagerSettings.poorguy end
+		if MasterLootManagerSettings.aq_zg_items_guy then XckMLAdvancedLUA.aq_zg_items_guy = MasterLootManagerSettings.aq_zg_items_guy end
+		if MasterLootManagerSettings.qualityListSet then XckMLAdvancedLUA.qualityListSet = MasterLootManagerSettings.qualityListSet end
+		if MasterLootManagerSettings.RollorNeed then XckMLAdvancedLUA.RollorNeed = MasterLootManagerSettings.RollorNeed end
+		if MasterLootManagerSettings.countdownStartTime then XckMLAdvancedLUA.countdownStartTime = MasterLootManagerSettings.countdownStartTime end
+		if MasterLootManagerSettings.looterfaction then XckMLAdvancedLUA.looterfaction = MasterLootManagerSettings.looterfaction end
+		if MasterLootManagerSettings.temp_sr then
+			XckMLAdvancedLUA.srData = MasterLootManagerSettings.temp_sr
+			MasterLootManagerSettings.temp_sr = nil
+		end
+
+		UIDropDownMenu_SetText(XckMLAdvancedLUA.PDez, XckMLAdvancedLUA.deDropdownFrame)
+		UIDropDownMenu_SetText(XckMLAdvancedLUA.bank, XckMLAdvancedLUA.bankDropdownFrame)
+		UIDropDownMenu_SetText(XckMLAdvancedLUA.poorguy, XckMLAdvancedLUA.poorguyDropdownFrame)
+		UIDropDownMenu_SetText(XckMLAdvancedLUA.aq_zg_items_guy, XckMLAdvancedLUA.aq_zg_items_guyDropdownFrame)
+		UIDropDownMenu_SetText(XckMLAdvancedLUA.qualityListSet, XckMLAdvancedLUA.qualityListDropdownFrame)
+		UIDropDownMenu_SetText(XckMLAdvancedLUA.RollorNeed, XckMLAdvancedLUA.RollorNeedDropdownFrame)
+		XckMLAdvancedLUA.CountDownTimeFrame:SetValue(XckMLAdvancedLUA.countdownStartTime)
+
 		self:UpdateDropdowns()
+	elseif (event == "PLAYER_LOGOUT") then
+		if not XckMLAdvancedLUA.reloading then
+			MasterLootManagerSettings.temp_sr = nil
+		end
+		XckMLAdvancedLUA.reloading = false
 	end
 end
 
@@ -366,6 +410,20 @@ function XckMLAdvancedLUA:SaveSettings()
 		local t = {}
 		for item,_ in XckMLAdvancedLUA.srData do table.insert(t,item) end
 		DEFAULT_CHAT_FRAME:AddMessage("|cff20b2aa->|r |cffffd700".."SRs loaded for: ".. table.concat(t,", ") .."|r|cffead454")
+	end
+
+	-- save to db too
+	do
+		MasterLootManagerSettings.guildmembersdb = guildmembersdb
+		MasterLootManagerSettings.PDez = XckMLAdvancedLUA.PDez
+		MasterLootManagerSettings.bank = XckMLAdvancedLUA.bank
+		MasterLootManagerSettings.poorguy = XckMLAdvancedLUA.poorguy
+		MasterLootManagerSettings.aq_zg_items_guy = XckMLAdvancedLUA.aq_zg_items_guy
+		MasterLootManagerSettings.qualityListSet = XckMLAdvancedLUA.qualityListSet
+		MasterLootManagerSettings.RollorNeed = XckMLAdvancedLUA.RollorNeed
+		MasterLootManagerSettings.countdownStartTime = XckMLAdvancedLUA.countdownStartTime
+		MasterLootManagerSettings.looterfaction = XckMLAdvancedLUA.looterfaction
+		MasterLootManagerSettings.temp_sr = XckMLAdvancedLUA.srData
 	end
 
 	XckMLAdvancedLUA.settings_set = true
@@ -1327,29 +1385,54 @@ end
 
 -- COUNTDOWN FUNCTION CORE
 function XckMLAdvancedLUA:OnUpdate()
-	if (self.countdownRunning) then
-		local currentCountdownPosition = math.ceil(self.countdownRange - GetTime() + self.countdownStartTime)
-		if (currentCountdownPosition < 0) then
-			currentCountdownPosition = 0
+	if not self.countdownRunning then
+		self.announcementTimes = nil
+		return
+	end
+
+	local elapsed = GetTime() - self.countdownStartTime
+	local currentTime = math.ceil(self.countdownRange - elapsed)
+	if currentTime < 0 then
+		currentTime = 0
+	end
+
+	local itemLink = MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)
+
+	-- Generate announcementTimes if they haven't been created yet.
+	if not self.announcementTimes then
+		self.announcementTimes = {}
+		if self.countdownRange >= 30 then
+			table.insert(self.announcementTimes, self.countdownRange)
+			local half = math.ceil(self.countdownRange / 2)
+			-- Avoid duplicate announcement if half equals 15 (e.g. for a 30‑second countdown)
+			if half ~= 15 then
+					table.insert(self.announcementTimes, half)
+			end
+			table.insert(self.announcementTimes, 15)
+			table.insert(self.announcementTimes, 10)
+			table.insert(self.announcementTimes, 5)
+		elseif self.countdownRange >= 15 then
+			table.insert(self.announcementTimes, self.countdownRange)
+			table.insert(self.announcementTimes, 10)
+			table.insert(self.announcementTimes, 5)
+		elseif self.countdownRange > 5 then
+			table.insert(self.announcementTimes, self.countdownRange)
+			table.insert(self.announcementTimes, 5)
 		end
-		local firstMessageTime = self.countdownRange
-		local secondMessageTime = math.ceil(self.countdownRange / 2)
+	end
 
-		local i = self.countdownLastDisplayed - 1
-		local itemLink = MasterLootTable:GetItemLink(XckMLAdvancedLUA.currentItemSelected)
-		while (i >= currentCountdownPosition) do
-	            if (currentCountdownPosition == firstMessageTime or currentCountdownPosition == secondMessageTime) then
-	                SendChatMessage(itemLink .. " " .. i .. " seconds left to roll", 'Raid')
-	            end
-	            -- self:Speak(i)
-	            i = i - 1
-	        end
+	-- Process any announcement times that have been reached.
+	while self.announcementTimes and self.announcementTimes[1] and currentTime <= self.announcementTimes[1] do
+		local t = table.remove(self.announcementTimes, 1)
+		if t > 0 then
+				SendChatMessage(itemLink .. " " .. t .. " seconds left to roll", 'Raid')
+		end
+	end
 
-		self.countdownLastDisplayed = currentCountdownPosition
-		if (currentCountdownPosition <= 0) then
-			self.countdownRunning = false
-			SendChatMessage(itemLink .. " Rolling is now Closed", 'Raid')
-		end	
+	if currentTime <= 0 then
+		self.countdownRunning = false
+		SendChatMessage(itemLink .. " Rolling is now Closed", 'Raid')
+		self.announcementTimes = nil
 	end
 end
 

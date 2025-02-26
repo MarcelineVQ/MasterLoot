@@ -102,7 +102,7 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 				justifyH="RIGHT" text="100">
 					<Anchors>
 						<Anchor point="RIGHT">
-							<Offset x="10" y="0" />
+							<Offset x="-5" y="0" />
 						</Anchor>
 					</Anchors>
 					<Color r="1" g="1" b="1" a="1" />

@@ -56,7 +56,7 @@ XckMLAdvancedLUA = {frame = nil,
 
 XckMLAdvancedLUASettings = {
 	ascending = false,
-	enforcelow = false,
+	enforcelow = true,
 	enforcehigh = false,
 	ignorefixed = true,
 }

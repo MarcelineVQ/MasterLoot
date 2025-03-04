@@ -1484,9 +1484,10 @@ function XckMLAdvancedLUA:OnUpdate()
 end
 
 function XckMLAdvancedLUA:OnShow()
-	if not XckMLAdvancedLUA.settings_set and not XckMLAdvancedMainSettings:IsShown() then
+	if not XckMLAdvancedLUA.settings_set then
 		XckMLAdvancedMainSettings:SetPoint("LEFT","LootFrame","RIGHT",-50,0)
 		XckMLAdvancedMainSettings:Show();
+		XckMLAdvancedMain:Hide()
 	else
 		XckMLAdvancedMainSettings:Hide();
 	end

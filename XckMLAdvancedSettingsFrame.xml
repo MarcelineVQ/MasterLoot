@@ -478,6 +478,9 @@
             </OnDragStop>
             <OnHide>
                 XckMLAdvancedLUA:SaveSettings()
+                if not XckMLAdvancedMain:IsVisible() then
+                    XckMLAdvancedMain:Show()
+                end
             </OnHide>
             <OnShow>
                 if not Util.isTableEmpty(XckMLAdvancedLUA.srData) then
